@@ -1,12 +1,18 @@
 {
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "uuid": "^8.3.1"
   },
   "name": "shengji",
   "version": "1.0.0",
   "main": "server.js",
   "repository": "https://github.com/andr-dev/shengji.git",
   "author": "Andre Benedito <abene1asus@gmail.com>",
-  "license": "See LICENSE.md"
+  "license": "See LICENSE.md",
+  "scripts": {
+    "start": "node -r esm server.js"
+  }
 }
