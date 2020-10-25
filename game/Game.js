@@ -22,7 +22,7 @@ export class Game {
     // });
   }
 
-  getInfo() {
+  getPublicInfo() {
     return {
       uuid: this.gameState.uuid,
       state: this.gameState.state,
@@ -34,16 +34,31 @@ export class Game {
     return this.gameState.uuid;
   }
 
+  getGameState() {
+    return this.gameState;
+  }
+
   joinGame(socketId) {
     if (this.gameState.players.length < 4) {
       if (this.gameState.players.includes(socketId)) {
         console.log("joinGame request to room [%s] from [%s] error: already in game", this.gameState.uuid, socketId);
-        return false;
+        return { success: false };
       }
       console.log("joinGame request to room [%s] from [%s] verified", this.gameState.uuid, socketId);
       this.gameState.players.push(socketId);
-      return true;
+      return { success: true, gameData: this.getGameState() };
     }
-    return false;
+    return { success: false };
+  }
+
+  playerLeave(socketId) {
+    var i = this.gameState.players.indexOf(socketId);
+    if (i > -1) {
+      this.gameState.players.splice(i, 1);
+      console.log("disconnect socket [%s] from room [%s] success", socketId, this.getUUID());
+    } else {
+      console.log("error: [%s] in game but not", socketId);
+      console.log("disconnect socket [%s] from room [%s] failed", socketId, this.getUUID());
+    }
   }
 }

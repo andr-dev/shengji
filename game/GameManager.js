@@ -17,16 +17,25 @@ module.exports = class GameManager {
   createGame() {
     var game = new Game(this.io);
     gameList.set(game.getUUID(), game);
-    return game.getInfo();
+    return game.getPublicInfo();
   }
 
   socketJoinGame(room, socketId) {
     var game = gameList.get(room);
     if (game == undefined) {
       console.log("joinGame request to room [%s] from [%s] error: game does not exist", game.getUUID(), socketId);
-      return false;
+      return { succcess: false };
     }
     return game.joinGame(socketId);
+  }
+
+  socketLeave(socketId) {
+    gameList.forEach((v, k) => {
+      if (v.gameState.players.includes(socketId)) {
+        console.log("disconnect socket [%s] from room [%s]", socketId, v.getUUID());
+        v.playerLeave(socketId);
+      }
+    });
   }
 };
 
